@@ -21,7 +21,7 @@ async function registerController(req: express.Request, res: express.Response) {
   const savedUser: DatabaseUser = await user.save().catch((err: any) => {
     switch (err.code) {
       case 11000:
-        res.json({ message: 'Duplicate field', keyValue: err.keyValue });
+        res.json({ message: 'Duplicate user', keyValue: err.keyValue });
         break;
     }
   });
