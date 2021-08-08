@@ -11,6 +11,7 @@ async function registerController(req: express.Request, res: express.Response) {
   const registerData: RegisterData = req.body;
   const result = validationResult(req);
   if (!result.isEmpty()) {
+    console.log(result);
     return res.status(400).json(result);
   }
   const salt = await bcrypt.genSalt(10);
@@ -21,7 +22,12 @@ async function registerController(req: express.Request, res: express.Response) {
   const savedUser: DatabaseUser = await user.save().catch((err: any) => {
     switch (err.code) {
       case 11000:
-        res.json({ message: 'Duplicate user', keyValue: err.keyValue });
+        console.log(JSON.stringify(err.keyValue).split('"'));
+        res.status(400).json({
+          message:
+            'Duplicate user with that ' +
+            JSON.stringify(err.keyValue).split('"')[1],
+        });
         break;
     }
   });
@@ -62,7 +68,7 @@ async function loginController(req: express.Request, res: express.Response) {
 }
 async function getUserController(req: express.Request, res: express.Response) {
   const { _id }: RequestUser = req.user;
-  const user: Omit<DatabaseUser, 'password'> = await UserModel.findById(
+  const user: Omit<DatabaseUser, 'password' | '_id'> = await UserModel.findById(
     _id,
   ).select('-password');
   res.json(user);

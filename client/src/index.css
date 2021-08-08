@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=McLaren&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 *,
 *::after,
 *::before {
@@ -5,6 +7,45 @@
 }
 body {
   margin: 0;
-  max-height: 100vh;
-  overflow: hidden;
+}
+/* App */
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+/* Register */
+.register {
+  display: flex;
+  flex-direction: column;
+  transform: scale(1.5);
+  border: 1px solid gray;
+  padding: 3rem;
+}
+.register *,
+.register {
+  font-family: 'Montserrat', sans-serif;
+  font-family: 'McLaren', italic;
+}
+.register > .heading {
+  text-align: center;
+}
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: min-content;
+  min-width: 25ch;
+  text-align: center;
+}
+.register-form > button {
+  background-color: hsl(80, 61%, 30%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.register-form > .error-message {
+  color: hsl(0, 100%, 40%);
 }

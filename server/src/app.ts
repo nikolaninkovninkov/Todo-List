@@ -2,8 +2,10 @@ import express from 'express';
 import { config as dotenv_config } from 'dotenv';
 import { connect } from 'mongoose';
 import usersRouter from './routes/usersRouter';
+import cors from 'cors';
 dotenv_config();
 const app = express();
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 const port = process.env['PORT'] || 5000;
 app.get('/', (req, res) => {
