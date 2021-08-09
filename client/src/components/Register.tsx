@@ -1,47 +1,36 @@
+import { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
-import { register } from '../api/usersApi';
+import { Link } from 'react-router-dom';
+// import { register } from '../api/usersApi';
+import useAuth from '../hooks/useAuth';
+import useRegisterValidation from '../hooks/useRegisterValidation';
 import isEmail from '../utils/isEmail';
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [error, setError] = useState('');
-  useEffect(() => {
-    if (!password || !email || !username || !name) {
-      return setError('Please fill out all form fields');
-    }
-    if (!isEmail(email)) {
-      return setError('Please enter a valid email address');
-    }
-    if (!(username.length >= 3 && username.length <= 32)) {
-      return setError(
-        'Username must be at least 3 characters long, and no more than 32 characters long',
-      );
-    }
-    const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
-    if (!passwordRegex.test(password)) {
-      return setError(
-        'Password must be at least 8 characters long, have one uppercase and one lowercase letter, and one digit',
-      );
-    }
-    setError('');
-  }, [username, password, email, name]);
+  const { register } = useAuth();
+  const { validationError, showError } = useRegisterValidation({
+    name,
+    password,
+    username,
+    email,
+  });
+  const [hasSubmittedOnce, setHasSubmittedOnce] = useState(false);
+
   async function formSubmitHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (error) return;
-    const response = await register({ name, email, password, username }).catch(
-      ({ response }) => {
-        setError(response.data.message);
-      },
-    );
+    setHasSubmittedOnce(true);
+    if (validationError) return;
+    register({ name, username, email, password });
   }
   return (
-    <div className="register">
-      <div className="heading">
+    <div className="auth">
+      <div className="auth-heading">
         <h1>Register</h1>
       </div>
-      <form className="register-form" onSubmit={formSubmitHandler}>
+      <form className="auth-form" onSubmit={formSubmitHandler}>
         <input
           type="text"
           name="name"
@@ -64,11 +53,19 @@ export default function Register() {
           placeholder="Password"
           onChange={(event) => setPassword(event.target.value)}
         />
-        {error ? <div className="error-message">{error}</div> : null}
-        <button type="submit" name="Submit">
+        {validationError && (showError || hasSubmittedOnce) ? (
+          <div className="auth-form-error-message">{validationError}</div>
+        ) : null}
+        <button type="submit" name="Submit" className="auth-form-submit-button">
           Register
         </button>
       </form>
+      <div className="auth-footer">
+        Already registered? Login{' '}
+        <Link to="/login" className="auth-redirect-link">
+          here
+        </Link>
+      </div>
     </div>
   );
 }

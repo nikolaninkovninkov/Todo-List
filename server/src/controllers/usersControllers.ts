@@ -24,9 +24,7 @@ async function registerController(req: express.Request, res: express.Response) {
       case 11000:
         console.log(JSON.stringify(err.keyValue).split('"'));
         res.status(400).json({
-          message:
-            'Duplicate user with that ' +
-            JSON.stringify(err.keyValue).split('"')[1],
+          message: 'Duplicate ' + JSON.stringify(err.keyValue).split('"')[1],
         });
         break;
     }
@@ -70,7 +68,7 @@ async function getUserController(req: express.Request, res: express.Response) {
   const { _id }: RequestUser = req.user;
   const user: Omit<DatabaseUser, 'password' | '_id'> = await UserModel.findById(
     _id,
-  ).select('-password');
+  ).select('-password -_id');
   res.json(user);
 }
 export { registerController, loginController, getUserController };

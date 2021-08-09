@@ -23,7 +23,7 @@ const passwordCheck = body(
   'password',
   'Password must include at least 1 lower case letter, 1 uppercase letter, at least one digit, and at least one special character',
 )
-  .isLength({ min: 8, max: 32 })
+  // .isLength({ min: 8, max: 32 })
   .matches(strongPasswordSchema);
 const registerHandlers = [nameCheck, usernameCheck, emailCheck, passwordCheck];
 /**
